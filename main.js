@@ -2,38 +2,40 @@
 let newsList=[];
 const menus=document.querySelectorAll(".menus button");
 menus.forEach(menu=>menu.addEventListener("click",(event)=>getNewsByCategory(event)))
+let url=new URL(`https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines`);
 
-const getLatestNews=async ()=>{
-    const url=new URL(`https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines`);
+const getNews=async()=>{
     const response= await fetch(url);
     const data = await response.json();
     newsList = data.articles;
     render();
-    console.log("ddd",newsList);
 };
+
+const getLatestNews=async ()=>{
+    url=new URL(`https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines`);
+
+    getNews();
+   
+};
+
+
 
 const getNewsByCategory= async (event)=>{
     const category=event.target.textContent.toLowerCase();
     console.log("category",category);
-    const url =new URL(`https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?category=${category}`);
-    const response = await fetch(url);
-    const data = await response.json();
-    console.log("ddd",data);
-    newsList=data.articles;
-    render();
+    url =new URL(`https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?category=${category}`);
+
+    getNews();
+    
 };
 
 
 const getNewsByKeyword=async()=>{
     const keyword=document.getElementById("search-input").value;
     console.log("keyword",keyword);
-    const url =new URL(`https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?q=${keyword}`);
-    const response =await fetch(url);
-    const data= await response.json();
-    console.log("keyword data", data);
+    url =new URL(`https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?q=${keyword}`);
 
-    newsList=data.articles;
-    render();
+    getNews();
 };
 
 
@@ -64,4 +66,4 @@ getLatestNews();
 
 //버튼들에게 클릭이벤트 부여 c
 //카테고리별 뉴스 가져오기 c
-//그 뉴스를 보여주기(render)
+//그 뉴스를 보여주기(render) c
