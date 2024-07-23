@@ -2,13 +2,36 @@
 let newsList=[];
 const menus=document.querySelectorAll(".menus button");
 menus.forEach(menu=>menu.addEventListener("click",(event)=>getNewsByCategory(event)))
-let url=new URL(`https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines`);
+let url=new URL(`https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines `);
+
+let totalResults=0;
+let page=1;
+const pagesize=10;
+const groupsize=5;
 
 const getNews=async()=>{
-    const response= await fetch(url);
-    const data = await response.json();
-    newsList = data.articles;
-    render();
+    try{
+        const response= await fetch(url);
+        const data = await response.json();
+        if(response.status===200){
+            if(data.articles.length===0){
+                throw new Error("No result for this search");
+            }
+            newsList = data.articles;
+            totalResult=data.totalResults;
+            render();
+            paginationRender();
+        }else{
+            throw new Error(data.message);
+        }
+
+
+
+
+     } catch (error){
+        
+        errorRender(error.message)
+     }
 };
 
 const getLatestNews=async ()=>{
@@ -61,6 +84,51 @@ const render=()=>{
 
     document.getElementById("news-board").innerHTML=newsHTML;
 };
+
+
+const errorRender=(errorMessage)=>{
+    const errorHTML=`<div class="alert alert-danger" role="alert">
+  ${errorMessage}
+    </div>`;
+
+    document.getElementById("news-board").innerHTML=errorHTML
+};
+
+const paginationRender=()=>{
+    const pageGroup=Math.ceil(page/groupsize);
+    const lastPage=pageGroup*groupsize;
+    const firstPage=lastPage-(groupsize-1);
+
+    let paginationHTML=``
+
+    for(let i=firstPage;i<=lastPage;i++){
+        paginationHTML+=`<li class="page-item"><a class="page-link" href="#">${i}</a></li>`
+    }
+
+    document.querySelector(".pagination").innerHTML=paginationHTML
+
+
+
+
+    // <nav aria-label="Page navigation example">
+    // <ul class="pagination">
+    //     <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+    //     <li class="page-item"><a class="page-link" href="#">1</a></li>
+    //     <li class="page-item"><a class="page-link" href="#">2</a></li>
+    //     <li class="page-item"><a class="page-link" href="#">3</a></li>
+    //     <li class="page-item"><a class="page-link" href="#">Next</a></li>
+    // </ul>
+    // </nav>
+
+
+
+
+};
+
+
+
+
+
 
 getLatestNews();    
 
