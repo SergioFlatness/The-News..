@@ -97,11 +97,12 @@ const errorRender=(errorMessage)=>{
 };
 
 const paginationRender=()=>{
-    const totalPages=Math.ceil(totalResults.pagesize);
+
+    const totalPage=Math.ceil(totalResults.pagesize);
 
     const pageGroup=Math.ceil(page/groupsize);
     const lastPage=pageGroup*groupsize;
-    if(lastPage> totalPages){
+    if(lastPage> totalPage){
         lastPage=totalPages;
     }
     const firstPage=lastPage-(groupsize-1)<=0? 1:lastPage-(groupsize-1);
